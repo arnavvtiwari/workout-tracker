@@ -19,9 +19,13 @@ const Home = () => {
     const checkNameAndRedirect = () => {
         let name = prompt("Please enter your name");
 
-        if (name === "Pallavi") {
+        if (name === "Pallavi"||name === "pallavi"||name === "PALLAVI"||name==="Dora"||name==="dora"||name==="DORA") {
             alert("Chotu Detected! Welcome to the Workout Tracker, Chotu!");
-        } else if (name) {
+        }
+        else if (name === "Arnav"||name === "arnav"||name === "ARNAV") {
+            alert("Welcome Sir!")
+        }
+         else if (name) {
             alert(`Welcome to the Workout Tracker, ${name}!`);
         } else {
             alert("No name entered. Welcome to the Workout Tracker!");

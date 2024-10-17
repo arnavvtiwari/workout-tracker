@@ -20,7 +20,7 @@ const Home = () => {
         let name = prompt("Please enter your name");
 
         if (name === "Pallavi") {
-            alert("Chotu Detected! Welcome to the Workout Tracker, Pallavi!");
+            alert("Chotu Detected! Welcome to the Workout Tracker, Chotu!");
         } else if (name) {
             alert(`Welcome to the Workout Tracker, ${name}!`);
         } else {

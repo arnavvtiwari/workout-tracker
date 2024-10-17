@@ -37,7 +37,7 @@ const Home = () => {
                 navigate('/workout');
             }, 100);
         } else {
-            alert("No name entered. Welcome to the Workout Tracker!");
+            alert("No name entered. Welcome to the Workout Tracker!"); 
         }
 
         // Delay the navigation to ensure the alert is fully handled before redirecting

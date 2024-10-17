@@ -21,20 +21,27 @@ const Home = () => {
 
         if (name === "Pallavi"||name === "pallavi"||name === "PALLAVI"||name==="Chotu Don"||name==="chotu don"||name==="CHOTU DON") {
             alert("Chotu Detected! Welcome to the Workout Tracker, Chotu!");
+            setTimeout(() => {
+                navigate('/food');
+            }, 100);
         }
         else if (name === "Arnav"||name === "arnav"||name === "ARNAV") {
             alert("Welcome Sir!")
+            setTimeout(() => {
+                navigate('/workout');
+            }, 100);
         }
          else if (name) {
             alert(`Welcome to the Workout Tracker, ${name}!`);
+            setTimeout(() => {
+                navigate('/workout');
+            }, 100);
         } else {
             alert("No name entered. Welcome to the Workout Tracker!");
         }
 
         // Delay the navigation to ensure the alert is fully handled before redirecting
-        setTimeout(() => {
-            navigate('/workout');
-        }, 100); // Small delay of 100ms
+         // Small delay of 100ms
     };
 
     return (

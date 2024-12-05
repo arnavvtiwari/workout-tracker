@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, redirect, useNavigate } from 'react-router-dom';
 
 const Home = () => {
     const navigate = useNavigate(); // Initialize useNavigate hook
@@ -57,13 +57,9 @@ const Home = () => {
             </p>
 
             {/* Single button to greet and redirect */}
-            <button
-                id="start-button"
-                onClick={checkNameAndRedirect}
-                className="bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-6 rounded transition duration-200 transform active:scale-95"
-            >
-                Get Started
-            </button>
+            <Link to="/workout" id="start-button" className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-6 rounded transition duration-200 transform active:scale-95">
+                Start
+            </Link>
         </div>
     );
 };

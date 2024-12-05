@@ -1,7 +1,4 @@
-
-import React from 'react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 const Workout = () => {
     const [workoutName, setWorkoutName] = useState('');
@@ -14,34 +11,80 @@ const Workout = () => {
     const [editingIndex, setEditingIndex] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleAddOrUpdateWorkout = (e) => {
+    // Fetch workouts from DB on component mount
+    useEffect(() => {
+        const fetchWorkouts = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/workout'); // Replace with your actual endpoint
+                const data = await response.json();
+                if (response.ok) {
+                    setWorkouts(data.workouts); // Assuming the API returns workouts in `data.workouts`
+                } else {
+                    console.error(data.error);
+                }
+            } catch (error) {
+                console.error('Error fetching workouts:', error);
+            }
+        };
+
+        fetchWorkouts();
+    }, []);
+
+    const handleAddOrUpdateWorkout = async (e) => {
         e.preventDefault();
         if (workoutName && weight && repetitions && sets && groupName) {
             const newWorkout = {
                 name: workoutName,
-                weight,
-                repetitions,
-                sets,
+                weight: Number(weight),
+                repetitions: Number(repetitions),
+                sets: Number(sets),
                 group: groupName,
             };
+            console.log(newWorkout);
 
-            if (isEditing) {
-                const updatedWorkouts = [...workouts];
-                updatedWorkouts[editingIndex] = newWorkout;
-                setWorkouts(updatedWorkouts);
-                setIsEditing(false);
-                setEditingIndex(null);
-            } else {
-                setWorkouts([...workouts, newWorkout]);
+            try {
+                let response;
+                if (isEditing) {
+                    // Update workout in DB
+                    const workoutId = workouts[editingIndex]._id; // Assuming `_id` is provided by the database
+                    response = await fetch(`http://localhost:3000/workout/${workoutId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newWorkout),
+                    });
+                } else {
+                    // Add new workout to DB
+                    response = await fetch('http://localhost:3000/workout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newWorkout),
+                    });
+                }
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message);
+                    setWorkouts(await fetchWorkoutsFromDb());
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Error saving workout:', error);
             }
 
             // Clear form fields and close modal
-            setWorkoutName('');
-            setWeight('');
-            setRepetitions('');
-            setSets('');
-            setGroupName('');
-            setIsModalOpen(false);
+            resetForm();
+        }
+    };
+
+    const fetchWorkoutsFromDb = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/workout');
+            const data = await response.json();
+            return response.ok ? data.workouts : workouts;
+        } catch (error) {
+            console.error('Error fetching workouts:', error);
+            return workouts;
         }
     };
 
@@ -57,9 +100,37 @@ const Workout = () => {
         setIsModalOpen(true);
     };
 
-    const handleDeleteWorkout = (index) => {
-        const updatedWorkouts = workouts.filter((_, i) => i !== index);
-        setWorkouts(updatedWorkouts);
+    const handleDeleteWorkout = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:3000/workout/${id}`, {
+                method: 'DELETE',
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            alert(data.message);
+    
+            // Update the UI by filtering out the deleted workout
+            setWorkouts(workouts.filter((workout) => workout._id !== id));
+        } catch (error) {
+            console.error('Error deleting workout:', error);
+            alert('Error deleting workout. Please try again.');
+        }
+    };
+    
+
+    const resetForm = () => {
+        setWorkoutName('');
+        setWeight('');
+        setRepetitions('');
+        setSets('');
+        setGroupName('');
+        setIsEditing(false);
+        setEditingIndex(null);
+        setIsModalOpen(false);
     };
 
     const groupedWorkouts = workouts.reduce((acc, workout) => {
@@ -72,16 +143,13 @@ const Workout = () => {
         <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center justify-center">
             <h1 className="text-4xl font-bold mb-4">Workout Tracker</h1>
 
-            {/* Button to Open Modal */}
             <button 
                 onClick={() => setIsModalOpen(true)} 
                 className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded mb-4 transition duration-200"
             >
                 Add Workout
             </button>
-            <Link to={"/"} className='className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded mb-4 transition duration-200"'> Home</Link>
 
-            {/* Modal for Adding/Editing Workouts */}
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <form 
@@ -138,16 +206,7 @@ const Workout = () => {
                             </button>
                             <button 
                                 type="button"
-                                onClick={() => {
-                                    setIsModalOpen(false);
-                                    setIsEditing(false);
-                                    setEditingIndex(null);
-                                    setWorkoutName('');
-                                    setWeight('');
-                                    setRepetitions('');
-                                    setSets('');
-                                    setGroupName('');
-                                }}
+                                onClick={resetForm}
                                 className="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded transition duration-200"
                             >
                                 Cancel
@@ -165,7 +224,7 @@ const Workout = () => {
                             <h3 className="text-xl font-bold">{group}</h3>
                             <ul className="space-y-2">
                                 {workouts.map((workout, index) => (
-                                    <li key={index} className="p-2 bg-gray-700 rounded flex justify-between items-center">
+                                    <li key={workout._id} className="p-2 bg-gray-700 rounded flex justify-between items-center">
                                         <span>
                                             <strong>{workout.name}</strong> | 
                                             Weight: {workout.weight} kg, 
@@ -180,11 +239,12 @@ const Workout = () => {
                                                 Edit
                                             </button>
                                             <button 
-                                                onClick={() => handleDeleteWorkout(index)}
-                                                className="bg-red-600 hover:bg-red-500 text-white py-1 px-2 rounded"
-                                            >
-                                                Delete
-                                            </button>
+    onClick={() => handleDeleteWorkout(workout._id)}
+    className="bg-red-600 hover:bg-red-500 text-white py-1 px-2 rounded"
+>
+    Delete
+</button>
+
                                         </div>
                                     </li>
                                 ))}

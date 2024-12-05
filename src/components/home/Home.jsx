@@ -1,65 +1,63 @@
 import React, { useEffect } from 'react';
-import { Link, redirect, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate();
 
     useEffect(() => {
         const button = document.getElementById('start-button');
         button.classList.add('animate__animated', 'animate__pulse');
-        
-        // Start a pulse animation when the component mounts
+
         const interval = setInterval(() => {
             button.classList.toggle('animate__pulse');
         }, 2000);
 
-        return () => clearInterval(interval); // Clean up on unmount
+        return () => clearInterval(interval);
     }, []);
 
     const checkNameAndRedirect = () => {
         let name = prompt("Please enter your name");
 
-        if (name === "Pallavi"||name === "pallavi"||name === "PALLAVI"||name==="Chotu Don"||name==="chotu don"||name==="CHOTU DON") {
+        if (name === "Pallavi" || name.toLowerCase() === "chotu don") {
             alert("Chotu Detected! Welcome to the Workout Tracker, Chotu!");
             setTimeout(() => {
                 navigate('/food');
             }, 100);
-        }
-        else if (name === "Arnav"||name === "arnav"||name === "ARNAV") {
-            alert("Welcome Sir!")
+        } else if (name && name.toLowerCase() === "arnav") {
+            alert("Welcome Sir!");
             setTimeout(() => {
                 navigate('/workout');
             }, 100);
-        }
-         else if (name) {
+        } else if (name) {
             alert(`Welcome to the Workout Tracker, ${name}!`);
             setTimeout(() => {
                 navigate('/workout');
             }, 100);
         } else {
-            alert("No name entered. Welcome to the Workout Tracker!"); 
+            alert("No name entered. Welcome to the Workout Tracker!");
         }
-
-        // Delay the navigation to ensure the alert is fully handled before redirecting
-         // Small delay of 100ms
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center text-center">
+        <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center text-center px-4">
             {/* Header */}
-            <header className="text-5xl font-bold mb-4 transform transition duration-500 hover:scale-105 animate__animated animate__fadeInDown">
+            <header className="text-4xl sm:text-5xl font-bold mb-6 transform transition duration-500 hover:scale-105 animate__animated animate__fadeInDown">
                 Workout Tracker
             </header>
 
             {/* Description */}
-            <p className="mb-6 transform transition duration-500 hover:scale-105 animate__animated animate__fadeInUp">
+            <p className="mb-8 text-sm sm:text-base transform transition duration-500 hover:scale-105 animate__animated animate__fadeInUp">
                 Track your workouts and stay fit!
             </p>
 
-            {/* Single button to greet and redirect */}
-            <Link to="/workout" id="start-button" className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-6 rounded transition duration-200 transform active:scale-95">
+            {/* Button */}
+            <button
+                onClick={checkNameAndRedirect}
+                id="start-button"
+                className="bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-6 text-sm sm:text-base rounded-full transition duration-200 transform active:scale-95 w-full max-w-xs"
+            >
                 Start
-            </Link>
+            </button>
         </div>
     );
 };

@@ -140,120 +140,117 @@ const Workout = () => {
     }, {});
 
     return (
-        <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center justify-center">
-            <h1 className="text-4xl font-bold mb-4">Workout Tracker</h1>
+        <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center p-6 sm:p-8 lg:p-12">
+    <h1 className="text-4xl sm:text-5xl font-bold mb-6 text-center">Workout Tracker</h1>
 
-            <button 
-                onClick={() => setIsModalOpen(true)} 
-                className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded mb-4 transition duration-200"
+    <button 
+        onClick={() => setIsModalOpen(true)} 
+        className="bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-6 rounded mb-6 w-full max-w-md transition duration-200 text-lg sm:text-xl"
+    >
+        Add Workout
+    </button>
+
+    {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
+            <form 
+                onSubmit={handleAddOrUpdateWorkout} 
+                className="bg-gray-900 p-8 rounded w-full max-w-lg sm:max-w-xl lg:max-w-2xl"
             >
-                Add Workout
-            </button>
-
-            {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <form 
-                        onSubmit={handleAddOrUpdateWorkout} 
-                        className="bg-gray-900 p-6 rounded w-80"
+                <h2 className="text-2xl sm:text-3xl font-bold mb-4">{isEditing ? 'Edit Workout' : 'Add Workout'}</h2>
+                <input
+                    type="text"
+                    value={workoutName}
+                    onChange={(e) => setWorkoutName(e.target.value)}
+                    placeholder="Workout Name"
+                    className="bg-gray-700 text-white p-3 rounded mb-4 w-full text-lg sm:text-xl"
+                    required
+                />
+                <input
+                    type="number"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                    placeholder="Weight (kg)"
+                    className="bg-gray-700 text-white p-3 rounded mb-4 w-full text-lg sm:text-xl"
+                    required
+                />
+                <input
+                    type="number"
+                    value={repetitions}
+                    onChange={(e) => setRepetitions(e.target.value)}
+                    placeholder="Reps"
+                    className="bg-gray-700 text-white p-3 rounded mb-4 w-full text-lg sm:text-xl"
+                    required
+                />
+                <input
+                    type="number"
+                    value={sets}
+                    onChange={(e) => setSets(e.target.value)}
+                    placeholder="Sets"
+                    className="bg-gray-700 text-white p-3 rounded mb-4 w-full text-lg sm:text-xl"
+                    required
+                />
+                <input
+                    type="text"
+                    value={groupName}
+                    onChange={(e) => setGroupName(e.target.value)}
+                    placeholder="Group Name"
+                    className="bg-gray-700 text-white p-3 rounded mb-6 w-full text-lg sm:text-xl"
+                    required
+                />
+                <div className="flex justify-between">
+                    <button 
+                        type="submit"
+                        className="bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-6 rounded text-lg sm:text-xl"
                     >
-                        <h2 className="text-xl font-bold mb-2">{isEditing ? 'Edit Workout' : 'Add Workout'}</h2>
-                        <input
-                            type="text"
-                            value={workoutName}
-                            onChange={(e) => setWorkoutName(e.target.value)}
-                            placeholder="Workout Name"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <input
-                            type="number"
-                            value={weight}
-                            onChange={(e) => setWeight(e.target.value)}
-                            placeholder="Weight (in kg)"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <input
-                            type="number"
-                            value={repetitions}
-                            onChange={(e) => setRepetitions(e.target.value)}
-                            placeholder="Repetitions"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <input
-                            type="number"
-                            value={sets}
-                            onChange={(e) => setSets(e.target.value)}
-                            placeholder="Sets"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <input
-                            type="text"
-                            value={groupName}
-                            onChange={(e) => setGroupName(e.target.value)}
-                            placeholder="Group Name"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <div className="flex justify-between">
-                            <button 
-                                type="submit"
-                                className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded transition duration-200"
-                            >
-                                {isEditing ? 'Update' : 'Add'}
-                            </button>
-                            <button 
-                                type="button"
-                                onClick={resetForm}
-                                className="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded transition duration-200"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
+                        {isEditing ? 'Update' : 'Add'}
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={resetForm}
+                        className="bg-red-600 hover:bg-red-500 text-white font-semibold py-3 px-6 rounded text-lg sm:text-xl"
+                    >
+                        Cancel
+                    </button>
                 </div>
-            )}
-
-            {Object.keys(groupedWorkouts).length > 0 && (
-                <div className="bg-gray-900 p-4 rounded w-full">
-                    <h2 className="text-2xl font-semibold mb-2">Added Workouts</h2>
-                    {Object.entries(groupedWorkouts).map(([group, workouts]) => (
-                        <div key={group} className="mb-4">
-                            <h3 className="text-xl font-bold">{group}</h3>
-                            <ul className="space-y-2">
-                                {workouts.map((workout, index) => (
-                                    <li key={workout._id} className="p-2 bg-gray-700 rounded flex justify-between items-center">
-                                        <span>
-                                            <strong>{workout.name}</strong> | 
-                                            Weight: {workout.weight} kg, 
-                                            Reps: {workout.repetitions}, 
-                                            Sets: {workout.sets}
-                                        </span>
-                                        <div className="flex space-x-2">
-                                            <button 
-                                                onClick={() => handleEditWorkout(index)}
-                                                className="bg-blue-600 hover:bg-blue-500 text-white py-1 px-2 rounded"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button 
-    onClick={() => handleDeleteWorkout(workout._id)}
-    className="bg-red-600 hover:bg-red-500 text-white py-1 px-2 rounded"
->
-    Delete
-</button>
-
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                </div>
-            )}
+            </form>
         </div>
+    )}
+
+    {Object.keys(groupedWorkouts).length > 0 && (
+        <div className="w-full max-w-4xl mt-8">
+            <h2 className="text-3xl font-semibold mb-4 text-center sm:text-left">Workouts</h2>
+            {Object.entries(groupedWorkouts).map(([group, workouts]) => (
+                <div key={group} className="mb-6">
+                    <h3 className="text-2xl font-bold bg-gray-700 p-4 rounded mb-4">{group}</h3>
+                    <ul className="space-y-4">
+                        {workouts.map((workout, index) => (
+                            <li key={workout._id} className="p-4 bg-gray-600 rounded flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                <span className="text-lg sm:text-xl">
+                                    <strong>{workout.name}</strong> | {workout.weight}kg, {workout.repetitions} reps, {workout.sets} sets
+                                </span>
+                                <div className="flex space-x-4 mt-4 sm:mt-0">
+                                    <button 
+                                        onClick={() => handleEditWorkout(index)}
+                                        className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded text-lg"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button 
+                                        onClick={() => handleDeleteWorkout(workout._id)}
+                                        className="bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded text-lg"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+        </div>
+    )}
+</div>
+
     );
 };
 

@@ -15,7 +15,7 @@ const Workout = () => {
     useEffect(() => {
         const fetchWorkouts = async () => {
             try {
-                const response = await fetch('http://localhost:3000/workout'); // Replace with your actual endpoint
+                const response = await fetch('https://workout-backend-1-thud.onrender.com/workout'); // Replace with your actual endpoint
                 const data = await response.json();
                 if (response.ok) {
                     setWorkouts(data.workouts); // Assuming the API returns workouts in `data.workouts`
@@ -47,14 +47,14 @@ const Workout = () => {
                 if (isEditing) {
                     // Update workout in DB
                     const workoutId = workouts[editingIndex]._id; // Assuming `_id` is provided by the database
-                    response = await fetch(`http://localhost:3000/workout/${workoutId}`, {
+                    response = await fetch(`https://workout-backend-1-thud.onrender.com/workout/${workoutId}`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(newWorkout),
                     });
                 } else {
                     // Add new workout to DB
-                    response = await fetch('http://localhost:3000/workout', {
+                    response = await fetch('https://workout-backend-1-thud.onrender.com/workout', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(newWorkout),
@@ -79,7 +79,7 @@ const Workout = () => {
 
     const fetchWorkoutsFromDb = async () => {
         try {
-            const response = await fetch('http://localhost:3000/workout');
+            const response = await fetch('https://workout-backend-1-thud.onrender.com/workout');
             const data = await response.json();
             return response.ok ? data.workouts : workouts;
         } catch (error) {
@@ -102,7 +102,7 @@ const Workout = () => {
 
     const handleDeleteWorkout = async (id) => {
         try {
-            const response = await fetch(`http://localhost:3000/workout/${id}`, {
+            const response = await fetch(`https://workout-backend-1-thud.onrender.com/workout/${id}`, {
                 method: 'DELETE',
             });
     

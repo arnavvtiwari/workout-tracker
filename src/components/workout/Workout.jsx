@@ -15,10 +15,10 @@ const Workout = () => {
     useEffect(() => {
         const fetchWorkouts = async () => {
             try {
-                const response = await fetch('https://workout-backend-1-thud.onrender.com/workout'); // Replace with your actual endpoint
+                const response = await fetch('https://workout-backend-1-thud.onrender.com/workout'); 
                 const data = await response.json();
                 if (response.ok) {
-                    setWorkouts(data.workouts); // Assuming the API returns workouts in `data.workouts`
+                    setWorkouts(data.workouts); 
                 } else {
                     console.error(data.error);
                 }
@@ -46,7 +46,7 @@ const Workout = () => {
                 let response;
                 if (isEditing) {
                     // Update workout in DB
-                    const workoutId = workouts[editingIndex]._id; // Assuming `_id` is provided by the database
+                    const workoutId = workouts[editingIndex]._id; 
                     response = await fetch(`https://workout-backend-1-thud.onrender.com/workout/${workoutId}`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
@@ -88,15 +88,15 @@ const Workout = () => {
         }
     };
 
-    const handleEditWorkout = (group, index) => {
-        const workout = groupedWorkouts[group][index];
+    const handleEditWorkout = (index) => {
+        const workout = workouts[index];
         setWorkoutName(workout.name);
         setWeight(workout.weight);
         setRepetitions(workout.repetitions);
         setSets(workout.sets);
-        setGroupName(group); // Use group from parameters
+        setGroupName(workout.group);
         setIsEditing(true);
-        setEditingIndex({ group, index }); // Store both group and index for further operations
+        setEditingIndex(index);
         setIsModalOpen(true);
     };
     
@@ -221,32 +221,33 @@ const Workout = () => {
                 <div className="bg-gray-900 p-4 rounded w-full">
                     <h2 className="text-2xl font-semibold mb-2">Added Workouts</h2>
                     {Object.entries(groupedWorkouts).map(([group, workouts]) => (
-    <div key={group} className="mb-4">
-        <h3 className="text-xl font-bold">{group}</h3>
-        <ul className="space-y-2">
-            {workouts.map((workout, index) => (
-                <li key={workout._id} className="p-2 bg-gray-700 rounded flex justify-between items-center">
-                    <span>
-                        <strong>{workout.name}</strong> | 
-                        Weight: {workout.weight} kg, 
-                        Reps: {workout.repetitions}, 
-                        Sets: {workout.sets}
-                    </span>
-                    <div className="flex space-x-2">
-                        <button 
-                            onClick={() => {
-                                handleEditWorkout(group, index);
-                            }}
-                            className="bg-blue-600 hover:bg-blue-500 text-white py-1 px-2 rounded"
-                        >
-                            Edit
-                        </button>
+                        <div key={group} className="mb-4">
+                            <h3 className="text-xl font-bold">{group}</h3>
+                            <ul className="space-y-2">
+                                {workouts.map((workout, index) => (
+                                    <li key={workout._id} className="p-2 bg-gray-700 rounded flex justify-between items-center">
+                                        <span>
+                                            <strong>{workout.name}</strong> | 
+                                            Weight: {workout.weight} kg, 
+                                            Reps: {workout.repetitions}, 
+                                            Sets: {workout.sets}
+                                        </span>
+                                        <div className="flex space-x-2">
                                             <button 
-    onClick={() => handleDeleteWorkout(workout._id)}
-    className="bg-red-600 hover:bg-red-500 text-white py-1 px-2 rounded"
->
-    Delete
-</button>
+                                                onClick={() => {
+                                                    handleEditWorkout(index)
+                                                    
+                                                }}
+                                                className="bg-blue-600 hover:bg-blue-500 text-white py-1 px-2 rounded"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button 
+                                                onClick={() => handleDeleteWorkout(workout._id)}
+                                                className="bg-red-600 hover:bg-red-500 text-white py-1 px-2 rounded"
+                                            >
+                                            Delete
+                                            </button>
 
                                         </div>
                                     </li>

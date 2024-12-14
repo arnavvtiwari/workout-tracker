@@ -143,122 +143,151 @@ const Workout = () => {
     }, {});
 
     return (
-        <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center justify-center">
-            <h1 className="text-4xl font-bold mb-4">Workout Tracker</h1>
+        <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white flex flex-col items-center py-10 px-4">
+    <h1 className="text-5xl font-extrabold mb-6 text-green-500 tracking-wide drop-shadow-lg">
+        Workout Tracker
+    </h1>
 
-            <button 
-                onClick={() => setIsModalOpen(true)} 
-                className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded mb-4 transition duration-200"
+    <button 
+        onClick={() => setIsModalOpen(true)} 
+        className="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-transform transform hover:scale-105 mb-8"
+    >
+        + Add Workout
+    </button>
+
+
+
+    {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+            <form 
+                onSubmit={handleAddOrUpdateWorkout} 
+                className="bg-gray-800 p-8 rounded-xl shadow-2xl w-96"
             >
-                Add Workout
-            </button>
-
-            {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <form 
-                        onSubmit={handleAddOrUpdateWorkout} 
-                        className="bg-gray-900 p-6 rounded w-80"
+                <h2 className="text-2xl font-bold text-green-400 mb-4">{isEditing ? 'Edit Workout' : 'Add Workout'}</h2>
+                <div className="space-y-4">
+                    <input
+                        type="text"
+                        value={workoutName}
+                        onChange={(e) => setWorkoutName(e.target.value)}
+                        placeholder="Workout Name"
+                        className="bg-gray-700 text-white p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-green-500"
+                        required
+                    />
+                    <input
+                        type="number"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        placeholder="Weight (in kg)"
+                        className="bg-gray-700 text-white p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-green-500"
+                        required
+                    />
+                    <input
+                        type="number"
+                        value={repetitions}
+                        onChange={(e) => setRepetitions(e.target.value)}
+                        placeholder="Repetitions"
+                        className="bg-gray-700 text-white p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-green-500"
+                        required
+                    />
+                    <input
+                        type="number"
+                        value={sets}
+                        onChange={(e) => setSets(e.target.value)}
+                        placeholder="Sets"
+                        className="bg-gray-700 text-white p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-green-500"
+                        required
+                    />
+                    <input
+                        type="text"
+                        value={groupName}
+                        onChange={(e) => setGroupName(e.target.value)}
+                        placeholder="Group Name"
+                        className="bg-gray-700 text-white p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-green-500"
+                        required
+                    />
+                </div>
+                <div className="flex justify-between mt-6">
+                    <button 
+                        type="submit"
+                        className="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-6 rounded-full transition-transform transform hover:scale-105"
                     >
-                        <h2 className="text-xl font-bold mb-2">{isEditing ? 'Edit Workout' : 'Add Workout'}</h2>
-                        <input
-                            type="text"
-                            value={workoutName}
-                            onChange={(e) => setWorkoutName(e.target.value)}
-                            placeholder="Workout Name"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <input
-                            type="number"
-                            value={weight}
-                            onChange={(e) => setWeight(e.target.value)}
-                            placeholder="Weight (in kg)"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <input
-                            type="number"
-                            value={repetitions}
-                            onChange={(e) => setRepetitions(e.target.value)}
-                            placeholder="Repetitions"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <input
-                            type="number"
-                            value={sets}
-                            onChange={(e) => setSets(e.target.value)}
-                            placeholder="Sets"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <input
-                            type="text"
-                            value={groupName}
-                            onChange={(e) => setGroupName(e.target.value)}
-                            placeholder="Group Name"
-                            className="bg-gray-700 text-white p-2 rounded mb-2 w-full"
-                            required
-                        />
-                        <div className="flex justify-between">
-                            <button 
-                                type="submit"
-                                className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded transition duration-200"
-                            >
-                                {isEditing ? 'Update' : 'Add'}
-                            </button>
-                            <button 
-                                type="button"
-                                onClick={resetForm}
-                                className="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded transition duration-200"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
+                        {isEditing ? 'Update' : 'Add'}
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={resetForm}
+                        className="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-6 rounded-full transition-transform transform hover:scale-105"
+                    >
+                        Cancel
+                    </button>
                 </div>
-            )}
-
-            {Object.keys(groupedWorkouts).length > 0 && (
-                <div className="bg-gray-900 p-4 rounded w-full">
-                    <h2 className="text-2xl font-semibold mb-2">Added Workouts</h2>
-                    {Object.entries(groupedWorkouts).map(([group, workouts]) => (
-                        <div key={group} className="mb-4">
-                            <h3 className="text-xl font-bold">{group}</h3>
-                            <ul className="space-y-2">
-                                {workouts.map((workout, index) => (
-                                    <li key={workout._id} className="p-2 bg-gray-700 rounded flex justify-between items-center">
-                                        <span>
-                                            <strong>{workout.name}</strong> | 
-                                            Weight: {workout.weight} kg, 
-                                            Reps: {workout.repetitions}, 
-                                            Sets: {workout.sets}
-                                        </span>
-                                        <div className="flex space-x-2">
-                                        <button 
-                                            onClick={() => handleEditWorkout(workout)} 
-                                            className="bg-blue-600 hover:bg-blue-500 text-white py-1 px-2 rounded"
-                                        >
-                                        Edit
-                                        </button>
-
-                                            <button 
-                                                onClick={() => handleDeleteWorkout(workout._id)}
-                                                className="bg-red-600 hover:bg-red-500 text-white py-1 px-2 rounded"
-                                            >
-                                            Delete
-                                            </button>
-
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                </div>
-            )}
+            </form>
         </div>
-    );
+    )}
+
+    {Object.keys(groupedWorkouts).length > 0 ? (
+        <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-4xl">
+            <h2 className="text-3xl font-semibold mb-4 text-green-400 border-b border-gray-700 pb-2">
+                Added Workouts
+            </h2>
+            {Object.entries(groupedWorkouts).map(([group, workouts]) => (
+                <div key={group} className="mb-6">
+                    <h3 className="text-2xl font-bold text-green-300 mb-2">{group}</h3>
+                    <ul className="space-y-4">
+                        {workouts.map((workout) => (
+                            <li 
+                                key={workout._id} 
+                                className="p-4 bg-gray-700 rounded-lg shadow-md flex justify-between items-center hover:bg-gray-600 transition"
+                            >
+                                <div>
+                                    <p className="font-semibold text-lg">{workout.name}</p>
+                                    <p className="text-sm text-gray-300">
+                                        Weight: {workout.weight} kg, Reps: {workout.repetitions}, Sets: {workout.sets}
+                                    </p>
+                                </div>
+                                <div className="flex space-x-4">
+                                    <button 
+                                        onClick={() => handleEditWorkout(workout)} 
+                                        className="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-full shadow transition-transform transform hover:scale-105"
+                                    >
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            strokeWidth="1.5" 
+                                            stroke="currentColor" 
+                                            className="w-5 h-5"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 3.487a2.25 2.25 0 011.591 3.855l-10.8 10.8a4.5 4.5 0 01-1.59 1.06l-3.32.973.973-3.319a4.5 4.5 0 011.06-1.591l10.8-10.8a2.25 2.25 0 013.856-1.591z" />
+                                        </svg>
+                                    </button>
+                                    <button 
+                                        onClick={() => handleDeleteWorkout(workout._id)}
+                                        className="bg-red-600 hover:bg-red-500 text-white p-2 rounded-full shadow transition-transform transform hover:scale-105"
+                                    >
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            strokeWidth="1.5" 
+                                            stroke="currentColor" 
+                                            className="w-5 h-5"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+        </div>
+    ) : (
+        <p className="text-gray-400 text-lg mt-10">No workouts added yet. Start tracking your progress!</p>
+    )}
+</div>
+    )
 };
 
 export default Workout;

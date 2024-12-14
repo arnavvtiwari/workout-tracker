@@ -31,6 +31,7 @@ const Workout = () => {
     }, []);
 
     const handleAddOrUpdateWorkout = async (e) => {
+        
         e.preventDefault();
         if (workoutName && weight && repetitions && sets && groupName) {
             const newWorkout = {
@@ -130,6 +131,7 @@ const Workout = () => {
         setSets('');
         setGroupName('');
         setEditingId(null);
+        setIsEditing(false)
         setIsModalOpen(false);
     };
     

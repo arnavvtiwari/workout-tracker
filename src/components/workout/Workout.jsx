@@ -8,7 +8,7 @@ const Workout = () => {
     const [groupName, setGroupName] = useState('');
     const [workouts, setWorkouts] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
-    const [editingIndex, setEditingIndex] = useState(null);
+    const [editingId, setEditingId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Fetch workouts from DB on component mount
@@ -40,14 +40,12 @@ const Workout = () => {
                 sets: Number(sets),
                 group: groupName,
             };
-            console.log(newWorkout);
-
+    
             try {
                 let response;
                 if (isEditing) {
-                    // Update workout in DB
-                    const workoutId = workouts[editingIndex]._id; 
-                    response = await fetch(`https://workout-backend-1-thud.onrender.com/workout/${workoutId}`, {
+                    // Update workout in DB using its unique _id
+                    response = await fetch(`https://workout-backend-1-thud.onrender.com/workout/${editingId}`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(newWorkout),
@@ -60,22 +58,24 @@ const Workout = () => {
                         body: JSON.stringify(newWorkout),
                     });
                 }
-
+    
                 const data = await response.json();
                 if (response.ok) {
                     alert(data.message);
-                    setWorkouts(await fetchWorkoutsFromDb());
+                    const updatedWorkouts = await fetchWorkoutsFromDb(); // Fetch updated workouts from DB
+                    setWorkouts(updatedWorkouts);
                 } else {
                     alert(data.error);
                 }
             } catch (error) {
                 console.error('Error saving workout:', error);
             }
-
-            // Clear form fields and close modal
+    
+            // Reset form fields
             resetForm();
         }
     };
+    
 
     const fetchWorkoutsFromDb = async () => {
         try {
@@ -88,17 +88,17 @@ const Workout = () => {
         }
     };
 
-    const handleEditWorkout = (index) => {
-        const workout = workouts[index];
+    const handleEditWorkout = (workout) => {
         setWorkoutName(workout.name);
         setWeight(workout.weight);
         setRepetitions(workout.repetitions);
         setSets(workout.sets);
         setGroupName(workout.group);
         setIsEditing(true);
-        setEditingIndex(index);
+        setEditingId(workout._id);// Set the unique _id of the workout being edited
         setIsModalOpen(true);
     };
+    
     
 
     const handleDeleteWorkout = async (id) => {
@@ -129,10 +129,10 @@ const Workout = () => {
         setRepetitions('');
         setSets('');
         setGroupName('');
-        setIsEditing(false);
-        setEditingIndex(null);
+        setEditingId(null);
         setIsModalOpen(false);
     };
+    
 
     const groupedWorkouts = workouts.reduce((acc, workout) => {
         acc[workout.group] = acc[workout.group] || [];
@@ -233,15 +233,13 @@ const Workout = () => {
                                             Sets: {workout.sets}
                                         </span>
                                         <div className="flex space-x-2">
-                                            <button 
-                                                onClick={() => {
-                                                    handleEditWorkout(index)
-                                                    
-                                                }}
-                                                className="bg-blue-600 hover:bg-blue-500 text-white py-1 px-2 rounded"
-                                            >
-                                                Edit
-                                            </button>
+                                        <button 
+                                            onClick={() => handleEditWorkout(workout)} 
+                                            className="bg-blue-600 hover:bg-blue-500 text-white py-1 px-2 rounded"
+                                        >
+                                        Edit
+                                        </button>
+
                                             <button 
                                                 onClick={() => handleDeleteWorkout(workout._id)}
                                                 className="bg-red-600 hover:bg-red-500 text-white py-1 px-2 rounded"
